@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">  
+<head>    
+    <title>GEOGRAFICASaUTM</title>    
+    <meta charset="UTF-8">
+    <meta name="title" content="ConversorDeCoordenadas">
+    <meta name="description" content="Convertir coordenadas geograficas a UTM">    
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+    <link href="style.css" rel="stylesheet">    
+</head>  
+<body>    
+    <header>
+        <h1>Geograficas a UTM</h1> 
+    </header>    
+    <div id="landscape">
+		<div id="formulario">
+			<label>Latitud (decimales):</label>
+			<input type="text" id="latitud">
+			<label>Longitud (decimales):</label>
+			<input type="text" id="longitud">
+			<br><label for="elipsoide">Elipsoide:</label>
+			<select id="elipsoide">
+			  <optgroup label="Elige una opción:">
+				<option value="WGS84">WGS84</option>
+				<option value="CLARKE 1886">CLARKE 1886</option>
+				<option value="WGS72">WGS72</option>
+				<option value="FISCHER 1968">FISCHER 1968</option>
+				<option value="SOUTH AMERICAN 1969">SOUTH AMERICAN 1969</option>
+				<option value="Hayford">Hayford</option>
+			  </optgroup>
+			</select>
+			<br><button id="convertir">Convertir</button>
+			<br><label>E:</label>
+			<input type="text" id="x" disabled>
+			<br><label>N:</label>
+			<input type="text" id="y" disabled>
+			<br><label>Factor de escala:</label>
+			<input type="text" id="factorDeEscala" disabled>
+			<br><label>Convergencia de meridianos:</label>
+			<input type="text" id="convergenciaDeMeridianos" disabled>
+			<br><label>Meridiano central (decimales):</label>
+			<input type="text" id="meridianoCentral" disabled>
+			<br><label>Huso (decimales):</label>
+			<input type="text" id="huso" disabled>
+
+		</div>
+	</div>
+	<script src="app.js"></script>
+    <footer>
+        <div class="footerIzquierda">Geograficas</div>
+        <div class="footerDerecha">Desarrollado por Floricel</div>
+        
+    </footer>
+</body>  
+</html>

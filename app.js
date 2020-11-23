@@ -1,0 +1,285 @@
+
+//Definición de parametros CLARKE1886
+var aCLARKE1886 = 6378206.4;
+var bCLARKE1886 = 6356583.8;
+
+//Definición de parametros WGS84
+var aWGS84 = 6378137;
+var bWGS84 = 6356752.314;
+
+//Definición Hayford
+var aHayford = 6378388.00
+var bHayford = 6356911.946
+
+//Definición WGS72
+var aWGS72 = 6378135;
+var bWGS72 = 6356750.52
+
+//Definición FISCHER 1968
+var aFISCHER1968 = 6378150;
+var bFISCHER1968 = 6356768.337;
+
+//Definición SOUTH AMERICAN 1969
+var aSOUTHAMERICAN1969 = 6378160; 
+var bSOUTHAMERICAN1969 = 6356774.719;
+
+//hemisferioNorte = 0.9996*Y
+//hemisferioNorte = 500000 + 0.9996*X
+//hemisferioSur = 10000000 + 0.9996*Y
+//hemisferioSur = 500000 + 0.9996*X
+
+
+function primeraExcentricidad(a, b){
+    return (Math.pow(a, 2) - Math.pow(b, 2))/Math.pow(b, 2);
+}
+
+function a0(primeraExcentricidadCalculada){
+    return 1-((3/4)*primeraExcentricidadCalculada)*(1-((15/16)*primeraExcentricidadCalculada)*(1-((35/36)*primeraExcentricidadCalculada)*(1-(((63/64)*primeraExcentricidadCalculada)* (1-(99/100)*primeraExcentricidadCalculada)))));
+}
+
+function a1(primeraExcentricidadCalculada){
+    return ((3/4)*primeraExcentricidadCalculada)*(1-((25/16)*primeraExcentricidadCalculada)*(1-((77/60)*primeraExcentricidadCalculada)*(1-(((837/704)*primeraExcentricidadCalculada)* (1-(2123/1860)*primeraExcentricidadCalculada)))));
+}
+
+function a2(primeraExcentricidadCalculada){
+    return ((5/8)*primeraExcentricidadCalculada)*(1-((139/144)*primeraExcentricidadCalculada)*(1-((1087/1112)*primeraExcentricidadCalculada)*(1-(((513427/521760)*primeraExcentricidadCalculada)))));
+}
+
+function a4(primeraExcentricidadCalculada, primeraExcentricidadAl2){
+    return ((35/72)*primeraExcentricidadAl2)*(1-((125/64)*primeraExcentricidadCalculada)*(1-((221069/150000)*primeraExcentricidadCalculada)));
+}
+
+function a6(primeraExcentricidadCalculada, primeraExcentricidadAl3){
+    return ((105/256)*primeraExcentricidadAl3)*(1-((1179/400)*primeraExcentricidadCalculada));
+}
+
+function a8(primeraExcentricidadAl4){
+    return ((231/640)*primeraExcentricidadAl4);
+}
+
+function radioDeCurvatura(a, b){
+    return (Math.pow(a,2))/b;
+}
+
+function longitudDeArco(A0, A1, A2, A4, A6, A8, c, latitud){
+    return (A0*c*latitud)-(A1*c*Math.sin(latitud)*Math.cos(latitud))*(1 + (A2 * Math.pow((Math.sin(latitud)),2)) + (A4 * Math.pow((Math.sin(latitud)),4)) + (A6 * Math.pow((Math.sin(latitud)),6)) + (A8 * Math.pow((Math.sin(latitud)),8)));
+}
+
+function gradosARadianes(coordenada){
+    return (coordenada*Math.PI)/180;
+}
+
+function radianesAGrados(convergencia){
+    return (convergencia * 180) / Math.PI;
+}
+
+function excentricidad(a, b){
+    return (Math.pow(a,2) - Math.pow(b,2)) / Math.pow(a,2)
+}
+
+function radioDeCurvaturaDeLaPrimeraVertical(a, excentricidadCalculada, latitud){
+    return a / Math.pow((1 - (excentricidadCalculada * Math.pow(Math.sin(latitud),2) )),(1/2));
+}
+
+function am1(radioDeCurvaturaDeLaPrimeraVertical, latitud){
+    return radioDeCurvaturaDeLaPrimeraVertical * Math.cos(latitud);
+}
+
+function am2(am1Calculada, latitud){
+    return (am1Calculada/2) * Math.sin(latitud);
+}
+
+function am3(am1Calculada, primeraExcentricidadCalculada, latitud){
+    return ((1/6) * am1Calculada) * (-1 + (2*Math.pow(Math.cos(latitud),2)) + (primeraExcentricidadCalculada * Math.pow(Math.cos(latitud),4)));
+}
+
+function am4(am2Calculada, primeraExcentricidadCalculada, primeraExcentricidadAl2,latitud){
+    return ( (1/12) * am2Calculada ) * (-1 + (6*Math.pow(Math.cos(latitud),2)) + ((9*primeraExcentricidadCalculada) * Math.pow(Math.cos(latitud),4)) + (4*primeraExcentricidadAl2*Math.pow(Math.cos(latitud),6)));
+}
+
+function am5(am1Calculada, primeraExcentricidadCalculada,latitud){
+    return ((1/120)*am1Calculada) * ( 1-(20*Math.pow(Math.cos(latitud),2)) + ((24 - (58*primeraExcentricidadCalculada))*Math.pow(Math.cos(latitud),4)) + (72*primeraExcentricidadCalculada*Math.pow(Math.cos(latitud),6)));
+}
+
+function am6(am2Calculada, latitud){
+    return (am2Calculada/360) * (1 - (60*Math.pow(Math.cos(latitud),2)) + (120*Math.pow(Math.cos(latitud),4))); 
+}
+
+function am7(latitud){
+    return Math.sin(latitud);
+}
+
+function am8(latitud, primeraExcentricidadCalculada){
+    return ((1/2)*Math.pow(Math.cos(latitud),2))*(1+primeraExcentricidadCalculada * (Math.pow(Math.cos(latitud),2)));
+}
+
+function am9(latitud, primeraExcentricidadCalculada, primeraExcentricidadAl2){
+    return (1/3)*Math.sin(latitud) * Math.pow(Math.cos(latitud),2) * (1 + (3*primeraExcentricidadCalculada * Math.pow(Math.cos(latitud),2)) + (2*primeraExcentricidadAl2 * Math.pow(Math.cos(latitud),4))); 
+}
+
+function am10(latitud, primeraExcentricidadCalculada){
+    return ((1/24)*Math.pow(Math.cos(latitud),2))*((-4) + ((9-(28*primeraExcentricidadCalculada)) * Math.pow(Math.cos(latitud),2)) + ((42*primeraExcentricidadCalculada) * Math.pow(Math.cos(latitud),4)) );
+}
+
+function am11(latitud){
+    return ((1/15) * Math.sin(latitud) * Math.pow(Math.cos(latitud),2)) * ((-1) + 3*(Math.pow(Math.cos(latitud),2)));
+}
+
+function diferenciaEnLongitud(longitud, meridianoCentral){
+    return longitud - meridianoCentral;
+}
+
+function x(diferenciaEnLongitudCalculada, am1Calculada , am3Calculada, am5Calculada){
+    return (am1Calculada * diferenciaEnLongitudCalculada) + ((am3Calculada * Math.pow(diferenciaEnLongitudCalculada,3)) + (am5Calculada * Math.pow(diferenciaEnLongitudCalculada,5)));
+}
+
+function y(longitudDeArcoCalculada, am2Calculada, diferenciaEnLongitudCalculada, am4Calculada, am6Calculada){
+    return longitudDeArcoCalculada + (am2Calculada * Math.pow(diferenciaEnLongitudCalculada,2)) + (am4Calculada * Math.pow(diferenciaEnLongitudCalculada,4)) + (am6Calculada * Math.pow(diferenciaEnLongitudCalculada,6));
+}
+
+function factorDeEscala(am8Calculada, diferenciaEnLongitudCalculada, am10Calculada){
+    return 1 + (am8Calculada * Math.pow(diferenciaEnLongitudCalculada,2)) + (am10Calculada * Math.pow(diferenciaEnLongitudCalculada,4));
+}
+
+function convergenciaDeMeridianos(am7Calculada, diferenciaEnLongitudCalculada, am9Calculada, am11Calculada){
+    return (am7Calculada * diferenciaEnLongitudCalculada) + (am9Calculada * Math.pow(diferenciaEnLongitudCalculada,3)) + (am11Calculada * Math.pow(diferenciaEnLongitudCalculada,5));
+}
+
+function calcularHuso(longitud){
+    return ((longitud/6)+31);
+}
+
+function calcularMeridianoCentral(huso){
+    return (6*huso-183);
+}
+
+document.getElementById("convertir").onclick = function(){
+
+    var latitud = parseFloat(document.getElementById("latitud").value);
+    var longitud = parseFloat(document.getElementById("longitud").value);
+    var a;
+    var b;
+
+    if(document.getElementById("elipsoide").value == "CLARKE 1886"){
+        a=aCLARKE1886;
+        b=bCLARKE1886;
+    }
+    if(document.getElementById("elipsoide").value == "WGS84"){
+        a=aWGS84;
+        b=bWGS84;
+    }
+    if(document.getElementById("elipsoide").value == "Hayford"){
+        a=aHayford;
+        b=bHayford;
+    }
+    if(document.getElementById("elipsoide").value == "WGS72"){
+        a=aWGS72;
+        b=bWGS72;
+    }
+    if(document.getElementById("elipsoide").value == "FISCHER 1968"){
+        a=aFISCHER1968;
+        b=bFISCHER1968;
+    }
+    if(document.getElementById("elipsoide").value == "SOUTH AMERICAN 1969"){
+        a=aSOUTHAMERICAN1969;
+        b=bSOUTHAMERICAN1969;
+    }
+
+
+    var primeraExcentricidadCalculada = primeraExcentricidad(a, b); 
+    var primeraExcentricidadAl2 = Math.pow(primeraExcentricidadCalculada,2);
+    var primeraExcentricidadAl3 = Math.pow(primeraExcentricidadCalculada,3);
+    var primeraExcentricidadAl4 = Math.pow(primeraExcentricidadCalculada,4);
+
+    var A0 = a0(primeraExcentricidadCalculada);
+    var A1 = a1(primeraExcentricidadCalculada);
+    var A2 = a2(primeraExcentricidadCalculada); 
+    var A4 = a4(primeraExcentricidadCalculada, primeraExcentricidadAl2);
+    var A6 = a6(primeraExcentricidadCalculada, primeraExcentricidadAl3);
+    var A8 = a8(primeraExcentricidadAl4);
+
+    var c = radioDeCurvatura(a, b);
+
+    var latitudEnGrados = latitud;
+    var longitudEnGrados = longitud; 
+
+    latitud = gradosARadianes(latitud);
+    longitud = gradosARadianes(longitud);
+    
+    var excentricidadCalculada = excentricidad(a, b);
+
+    var N = radioDeCurvaturaDeLaPrimeraVertical(a, excentricidadCalculada, latitud);
+
+    var AM1 = am1(N, latitud);
+
+    var AM2 = am2(AM1,latitud);
+
+    var AM3 = am3(AM1, primeraExcentricidadCalculada, latitud);
+
+    var AM4 = am4(AM2, primeraExcentricidadCalculada, primeraExcentricidadAl2, latitud);
+
+    var AM5 = am5(AM1,primeraExcentricidadCalculada, latitud);
+
+    var AM6 = am6(AM2,latitud);
+
+    var AM7 = am7(latitud);
+
+    var AM8 = am8(latitud,primeraExcentricidadCalculada);
+
+    var AM9 = am9(latitud, primeraExcentricidadCalculada, primeraExcentricidadAl2);
+    
+    var AM10 = am10(latitud, primeraExcentricidadCalculada);
+
+    var AM11 = am11(latitud);
+
+    var huso = calcularHuso(longitudEnGrados);
+
+    var meridianoCentral = calcularMeridianoCentral(huso);//-75;
+
+    var diferenciaEnLongitudCalculada = diferenciaEnLongitud(longitud, gradosARadianes(meridianoCentral));
+
+    var X = x(diferenciaEnLongitudCalculada, AM1, AM3, AM5);   
+
+    document.getElementById("x").value = X + " m";
+
+    var longitudDeArcoCalculada = longitudDeArco(A0, A1, A2, A4, A6, A8, c, latitud);
+
+    var Y = y (longitudDeArcoCalculada, AM2, diferenciaEnLongitudCalculada, AM4, AM6);
+
+    document.getElementById("y").value = Y + " m";
+
+    var factor = factorDeEscala(AM8, diferenciaEnLongitudCalculada, AM10);
+
+    document.getElementById("factorDeEscala").value = factor;
+
+    var convergencia = convergenciaDeMeridianos(AM7, diferenciaEnLongitudCalculada, AM9, AM11);
+
+    convergencia = radianesAGrados(convergencia);
+
+    var grados = parseInt(convergencia);
+
+    convergencia = Math.abs(convergencia) - Math.abs(grados);
+
+    convergencia = convergencia * 60;
+
+    var minutos = parseInt(convergencia);
+
+    convergencia = convergencia - minutos;
+
+    convergencia = convergencia * 60;
+
+    var segundos = (convergencia);
+
+    segundos =  segundos.toFixed(3);
+
+    document.getElementById("convergenciaDeMeridianos").value = grados +"° " + minutos +"' " +segundos+"'' ";
+
+    document.getElementById("meridianoCentral").value = meridianoCentral;
+
+    document.getElementById("huso").value = huso;
+
+
+
+    
+};
+
