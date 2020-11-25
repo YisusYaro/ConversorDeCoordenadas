@@ -22,7 +22,7 @@
 			<select id="elipsoide">
 			  <optgroup label="Elige una opción:">
 				<option value="WGS84">WGS84</option>
-				<option value="CLARKE 1886">CLARKE 1886</option>
+				<option value="CLARKE 1886">CLARKE 1866</option>
 				<option value="WGS72">WGS72</option>
 				<option value="FISCHER 1968">FISCHER 1968</option>
 				<option value="SOUTH AMERICAN 1969">SOUTH AMERICAN 1969</option>
@@ -30,6 +30,8 @@
 			  </optgroup>
 			</select>
 			<br><button id="convertir">Convertir</button>
+			<br><label>Hemisferio:</label>
+			<input type="text" id="hemisferio" disabled>
 			<br><label>E:</label>
 			<input type="text" id="x" disabled>
 			<br><label>N:</label>
@@ -42,6 +44,39 @@
 			<input type="text" id="meridianoCentral" disabled>
 			<br><label>Huso (decimales):</label>
 			<input type="text" id="huso" disabled>
+
+		</div>
+		<div id="formulario">
+			<label>Coordenada Este:</label>
+			<input type="text" id="coordenadaEsteC">
+			<label>Coordenada Norte:</label>
+			<input type="text" id="coordenadaNorteC">
+			<br><label for="elipsoideC">Elipsoide:</label>
+			<select id="elipsoideC">
+			  <optgroup label="Elige una opción:">
+				<option value="WGS84C">WGS84</option>
+				<option value="CLARKE 1886C">CLARKE 1866</option>
+				<option value="WGS72C">WGS72</option>
+				<option value="FISCHER 1968C">FISCHER 1968</option>
+				<option value="SOUTH AMERICAN 1969C">SOUTH AMERICAN 1969</option>
+				<option value="HayfordC">Hayford</option>
+			  </optgroup>
+			</select>
+			<br><button id="convertirC">Convertir</button>
+			<br><label>Hemisferio:</label>
+			<input type="text" id="hemisferioC" disabled>
+			<br><label>Latitud:</label>
+			<input type="text" id="latitudC" disabled>
+			<br><label>Longitud:</label>
+			<input type="text" id="longitudC" disabled>
+			<br><label>Factor de escala:</label>
+			<input type="text" id="factorDeEscalaC" disabled>
+			<br><label>Convergencia de meridianos:</label>
+			<input type="text" id="convergenciaDeMeridianosC" disabled>
+			<br><label>Meridiano central (decimales):</label>
+			<input type="text" id="meridianoCentralC" disabled>
+			<br><label>Huso (decimales):</label>
+			<input type="text" id="husoC" disabled>
 
 		</div>
 	</div>

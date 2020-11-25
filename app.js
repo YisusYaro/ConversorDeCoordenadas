@@ -23,10 +23,7 @@ var bFISCHER1968 = 6356768.337;
 var aSOUTHAMERICAN1969 = 6378160; 
 var bSOUTHAMERICAN1969 = 6356774.719;
 
-//hemisferioNorte = 0.9996*Y
-//hemisferioNorte = 500000 + 0.9996*X
-//hemisferioSur = 10000000 + 0.9996*Y
-//hemisferioSur = 500000 + 0.9996*X
+
 
 
 function primeraExcentricidad(a, b){
@@ -153,6 +150,30 @@ function calcularMeridianoCentral(huso){
     return (6*huso-183);
 }
 
+function b1(N, latitud3){
+    return (1/N)*(1/Math.cos(latitud3));
+}
+
+function b2(primeraExcentricidadCalculada, latitud3, b1Calculada){
+    return (-1/2)*Math.pow(b1Calculada,2)*Math.sin(latitud3)*Math.cos(latitud3)*(1+primeraExcentricidadCalculada*Math.pow(Math.cos(latitud3),2));
+}
+
+function b3(b1Calculada, primeraExcentricidadCalculada, latitud3){
+    return (-1/6)*Math.pow(b1Calculada,3)*(2-Math.pow(Math.cos(latitud3),2) + primeraExcentricidadCalculada*Math.pow(Math.cos(latitud3),4));
+}
+
+function b4(b1Calculada, b2Calculada, primeraExcentricidadCalculada, latitud3){
+    return (-1/12)*Math.pow(b1Calculada,2)*b2Calculada*(3 + (2-9 * primeraExcentricidadCalculada) * Math.pow(Math.cos(latitud3),2) + 10*primeraExcentricidadCalculada * Math.pow(Math.cos(latitud3),4) - (4*Math.pow(primeraExcentricidadCalculada,2) * Math.pow(Math.cos(latitud3),6)));
+}
+
+function b5(b1Calculada, latitud3, primeraExcentricidadCalculada){
+    return (1/120) * Math.pow(b1Calculada,5) * (24-(20 * Math.pow(Math.cos(latitud3),2)) + (1+8*primeraExcentricidadCalculada) * Math.pow(Math.cos(latitud3),4) - 2*primeraExcentricidadCalculada * Math.pow(Math.cos(latitud3),6) ); 
+}
+
+function b6(b1Calculada, b2Calculada, latitud3){
+    return ((1/360) * Math.pow(b1Calculada, 4) * b2Calculada) * (45 + (16 * Math.pow(Math.cos(latitud3),4) ) );
+}
+
 document.getElementById("convertir").onclick = function(){
 
     var latitud = parseFloat(document.getElementById("latitud").value);
@@ -233,22 +254,43 @@ document.getElementById("convertir").onclick = function(){
     var AM11 = am11(latitud);
 
     var huso = calcularHuso(longitudEnGrados);
+    
+    huso = parseInt(huso);
 
     var meridianoCentral = calcularMeridianoCentral(huso);//-75;
 
     var diferenciaEnLongitudCalculada = diferenciaEnLongitud(longitud, gradosARadianes(meridianoCentral));
 
-    var X = x(diferenciaEnLongitudCalculada, AM1, AM3, AM5);   
-
-    document.getElementById("x").value = X + " m";
-
+    var X = x(diferenciaEnLongitudCalculada, AM1, AM3, AM5);
+        
     var longitudDeArcoCalculada = longitudDeArco(A0, A1, A2, A4, A6, A8, c, latitud);
 
     var Y = y (longitudDeArcoCalculada, AM2, diferenciaEnLongitudCalculada, AM4, AM6);
 
+    //hemisferio norte
+    if(latitud>0){
+        X = 500000 + (0.9996*X);
+        Y = 0.9996*Y;
+        document.getElementById("hemisferio").value = "Norte";
+    }
+    //hemisferio sur
+    if(latitud<=0){
+        X = 500000 + (0.9996*X);
+        Y = 10000000 + (0.9996*Y);
+        document.getElementById("hemisferio").value = "Sur";
+    }
+
+    X = X.toFixed(3);
+
+    Y = Y.toFixed(3);
+
+    document.getElementById("x").value = X + " m";
+
     document.getElementById("y").value = Y + " m";
 
     var factor = factorDeEscala(AM8, diferenciaEnLongitudCalculada, AM10);
+
+    factor =  factor.toFixed(8);
 
     document.getElementById("factorDeEscala").value = factor;
 
@@ -278,8 +320,101 @@ document.getElementById("convertir").onclick = function(){
 
     document.getElementById("huso").value = huso;
 
-
-
-    
 };
+
+document.getElementById("convertirC").onclick = function(){
+    
+    var coordenadaNorte = parseFloat(document.getElementById("coordenadaNorteC").value);
+    var coordenadaEste = parseFloat(document.getElementById("coordenadaEsteC").value);
+
+    var y;
+    var x;
+
+    if(coordenadaNorte>0){
+        y = coordenadaNorte / 0.9996;
+        x = (coordenadaEste - 500000)/0.9996;
+    }
+    if(coordenadaNorte<=0){
+        y = (coordenadaNorte - 10000000) / 0.9996;
+        x = (coordenadaEste - 500000) / 0.9996;
+    }
+
+    var a;
+    var b;
+
+    if(document.getElementById("elipsoideC").value == "CLARKE 1886C"){
+        a=aCLARKE1886;
+        b=bCLARKE1886;
+    }
+    if(document.getElementById("elipsoideC").value == "WGS84C"){
+        a=aWGS84;
+        b=bWGS84;
+    }
+    if(document.getElementById("elipsoideC").value == "HayfordC"){
+        a=aHayford;
+        b=bHayford;
+    }
+    if(document.getElementById("elipsoideC").value == "WGS72C"){
+        a=aWGS72;
+        b=bWGS72;
+    }
+    if(document.getElementById("elipsoideC").value == "FISCHER 1968C"){
+        a=aFISCHER1968;
+        b=bFISCHER1968;
+    }
+    if(document.getElementById("elipsoideC").value == "SOUTH AMERICAN 1969C"){
+        a=aSOUTHAMERICAN1969;
+        b=bSOUTHAMERICAN1969;
+    }
+
+    var primeraExcentricidadCalculada = primeraExcentricidad(a, b); 
+    var primeraExcentricidadAl2 = Math.pow(primeraExcentricidadCalculada,2);
+    var primeraExcentricidadAl3 = Math.pow(primeraExcentricidadCalculada,3);
+    var primeraExcentricidadAl4 = Math.pow(primeraExcentricidadCalculada,4);
+
+    var A0 = a0(primeraExcentricidadCalculada);
+    var A1 = a1(primeraExcentricidadCalculada);
+    var A2 = a2(primeraExcentricidadCalculada); 
+    var A4 = a4(primeraExcentricidadCalculada, primeraExcentricidadAl2);
+    var A6 = a6(primeraExcentricidadCalculada, primeraExcentricidadAl3);
+    var A8 = a8(primeraExcentricidadAl4);
+
+    var c = radioDeCurvatura(a, b);
+
+    var latitud1 = y/(A0*c);
+
+    var longitudDeArcoCalculada1 = longitudDeArco(A0, A1, A2, A4, A6, A8, c, latitud1);
+
+    var latitud2 = latitud1 + ((y-longitudDeArcoCalculada1)/(A0*c));
+
+    var longitudDeArcoCalculada2 = longitudDeArco(A0, A1, A2, A4, A6, A8, c, latitud2);
+
+    var latitud3 = latitud2 + ((y - longitudDeArcoCalculada2)/(A0*c));
+
+    var longitudDeArcoCalculada3 = longitudDeArco(A0, A1, A2, A4, A6, A8, c, latitud3);
+
+    var N = radioDeCurvaturaDeLaPrimeraVertical(a, primeraExcentricidadCalculada, latitud3);
+
+    var b1Calculada = b1(N, latitud3);
+
+    var b2Calculada = b2(primeraExcentricidadCalculada, latitud3, b1Calculada);
+    
+    var b3Calculada = b3(b1Calculada, primeraExcentricidadCalculada, latitud3);
+
+    var b4Calculada = b4(b1Calculada, b2Calculada, primeraExcentricidadCalculada, latitud3);
+
+    var b5Calculada = b5(b1Calculada, latitud3, primeraExcentricidadCalculada);
+
+    var b6Calculada = b6(b1Calculada, b2Calculada, latitud3);alert(b6Calculada);
+
+    var latitud = latitud3 + b2Calculada * Math.pow(x,2) + b4Calculada * Math.pow(x,4) + b6Calculada * Math.pow(x, 6); 
+
+    document.getElementById("latitudC").value = radianesAGrados(latitud);
+
+
+
+
+
+};
+
 
