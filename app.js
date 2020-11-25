@@ -453,12 +453,7 @@ document.getElementById("convertirC").onclick = function(){
 
     document.getElementById("longitudC").value = datosLongitud[0] +"° "+ datosLongitud[1] +"' "+ datosLongitud[2]+"''";
 
-    if(latitud>0){
-        document.getElementById("hemisferioC").value="Norte";
-    }
-    else{
-        document.getElementById("hemisferioC").value="Sur";
-    }
+
 
     var b8Calculada = b8(c, primeraExcentricidadCalculada, latitud3);
 
