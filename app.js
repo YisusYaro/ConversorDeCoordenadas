@@ -450,12 +450,12 @@ document.getElementById("convertirC").onclick = function(){
 
     var coeficienteb1 = Math.pow(radioDeCurvaturaDeLaPrimeraVerticalCalculado,-1) / Math.cos(latitud3);
 
-    var coeficienteb7 = b1Calculada * Math.sin(latitud3);alert(coeficienteb7);
+    var coeficienteb7 = b1Calculada * Math.sin(latitud3);
     
     var coeficienteb9 = (-1/3) * Math.pow(b1Calculada,3) * Math.sin(latitud3) * (1 -(primeraExcentricidadCalculada* Math.pow(Math.cos(latitud3),4)) - 2*primeraExcentricidadAl2 * Math.pow(Math.cos(latitud3),6));
-    alert(coeficienteb9);
+
     var coeficienteb11 = (1/15) * Math.pow(b1Calculada,5) * Math.sin(latitud3) * (3 - Math.pow(Math.cos(latitud3),2));
-    alert(coeficienteb11);
+
     var convergenciaUTM = (coeficienteb7 * x) + (coeficienteb9 * Math.pow(x,3)) + coeficienteb11;
 
     convergenciaUTM = radianesAGrados(convergenciaUTM);
