@@ -9,15 +9,16 @@
     <link href="style.css" rel="stylesheet">    
 </head>  
 <body>    
-    <header>
-        <h1>Geograficas a UTM</h1> 
+    <header><img src="logo1.png">
+        <h1>Conversor de Coordenadas</h1> 
     </header>    
     <div id="landscape">
 		<div id="formulario">
+			<p>Geograficas a UTM</p>
 			<label>Latitud (decimales):</label>
-			<input type="text" id="latitud">
+			<input type="text" id="latitud" placeholder="latitud (+/-)">
 			<label>Longitud (decimales):</label>
-			<input type="text" id="longitud">
+			<input type="text" id="longitud" placeholder="longitud (+/-)">
 			<br><label for="elipsoide">Elipsoide:</label>
 			<select id="elipsoide">
 			  <optgroup label="Elige una opción:">
@@ -40,17 +41,20 @@
 			<input type="text" id="factorDeEscala" disabled>
 			<br><label>Convergencia de meridianos:</label>
 			<input type="text" id="convergenciaDeMeridianos" disabled>
-			<br><label>Meridiano central (decimales):</label>
+			<br><label>Meridiano central:</label>
 			<input type="text" id="meridianoCentral" disabled>
-			<br><label>Huso (decimales):</label>
+			<br><label>Huso:</label>
 			<input type="text" id="huso" disabled>
 
 		</div>
 		<div id="formulario">
+			<p>UTM a Geograficas</p>
 			<label>Coordenada Este:</label>
 			<input type="text" id="coordenadaEsteC">
 			<label>Coordenada Norte:</label>
 			<input type="text" id="coordenadaNorteC">
+			<br><label>Huso:</label>
+			<input type="text" id="husoC">
 			<br><label for="elipsoideC">Elipsoide:</label>
 			<select id="elipsoideC">
 			  <optgroup label="Elige una opción:">
@@ -73,17 +77,15 @@
 			<input type="text" id="factorDeEscalaC" disabled>
 			<br><label>Convergencia de meridianos:</label>
 			<input type="text" id="convergenciaDeMeridianosC" disabled>
-			<br><label>Meridiano central (decimales):</label>
+			<br><label>Meridiano central:</label>
 			<input type="text" id="meridianoCentralC" disabled>
-			<br><label>Huso (decimales):</label>
-			<input type="text" id="husoC" disabled>
 
 		</div>
 	</div>
 	<script src="app.js"></script>
     <footer>
-        <div class="footerIzquierda">Geograficas</div>
-        <div class="footerDerecha">Desarrollado por Floricel</div>
+        <div class="footerIzquierda">Facultad de Ingeniería - Ingeniería Topográfica y Geodésica</div>
+        <div class="footerDerecha">Desarrollado por Floricel Pérez Pérez</div>
         
     </footer>
 </body>  

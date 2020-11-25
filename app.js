@@ -24,10 +24,12 @@ var aSOUTHAMERICAN1969 = 6378160;
 var bSOUTHAMERICAN1969 = 6356774.719;
 
 
-
-
 function primeraExcentricidad(a, b){
     return (Math.pow(a, 2) - Math.pow(b, 2))/Math.pow(b, 2);
+}
+
+function primeraExcentricidad2(a,b){
+    return (Math.pow(a, 2) - Math.pow(b, 2))/Math.pow(a, 2);
 }
 
 function a0(primeraExcentricidadCalculada){
@@ -174,6 +176,14 @@ function b6(b1Calculada, b2Calculada, latitud3){
     return ((1/360) * Math.pow(b1Calculada, 4) * b2Calculada) * (45 + (16 * Math.pow(Math.cos(latitud3),4) ) );
 }
 
+function b8(c, primeraExcentricidadCalculada, latitud3){
+    return ((1/2)*Math.pow(c,-2))*Math.pow((1 + primeraExcentricidadCalculada * Math.pow(Math.cos(latitud3),2)),2);
+}
+
+function b10(c, primeraExcentricidadCalculada, latitud3){
+    return (1/24)*Math.pow(c,-4)*(1+4*primeraExcentricidadCalculada* Math.pow(Math.cos(latitud3),2) );
+}
+
 document.getElementById("convertir").onclick = function(){
 
     var latitud = parseFloat(document.getElementById("latitud").value);
@@ -290,7 +300,7 @@ document.getElementById("convertir").onclick = function(){
 
     var factor = factorDeEscala(AM8, diferenciaEnLongitudCalculada, AM10);
 
-    factor =  factor.toFixed(8);
+    factor =  factor.toFixed(7);
 
     document.getElementById("factorDeEscala").value = factor;
 
@@ -405,11 +415,71 @@ document.getElementById("convertirC").onclick = function(){
 
     var b5Calculada = b5(b1Calculada, latitud3, primeraExcentricidadCalculada);
 
-    var b6Calculada = b6(b1Calculada, b2Calculada, latitud3);alert(b6Calculada);
+    var b6Calculada = b6(b1Calculada, b2Calculada, latitud3);
 
     var latitud = latitud3 + b2Calculada * Math.pow(x,2) + b4Calculada * Math.pow(x,4) + b6Calculada * Math.pow(x, 6); 
 
     document.getElementById("latitudC").value = radianesAGrados(latitud);
+
+    var huso =  document.getElementById("husoC").value;
+
+    var meridianoCentral = calcularMeridianoCentral(huso);
+    
+    var longitud = gradosARadianes(meridianoCentral) + b1Calculada * x + b3Calculada * Math.pow(x,3) + b5Calculada * Math.pow(x,5);
+
+    document.getElementById("longitudC").value = radianesAGrados(longitud);
+
+    if(latitud>0){
+        document.getElementById("hemisferioC").value="Norte";
+    }
+    else{
+        document.getElementById("hemisferioC").value="Sur";
+    }
+
+    var b8Calculada = b8(c, primeraExcentricidadCalculada, latitud3);
+
+    var b10Calculada = b10(c, primeraExcentricidadCalculada, latitud3);
+
+    var factorDeEscala = 1 + b8Calculada * Math.pow(x,2) + b10Calculada * Math.pow(x,4);
+    
+    document.getElementById("factorDeEscalaC").value = factorDeEscala.toFixed(7);
+
+    document.getElementById("meridianoCentralC").value = meridianoCentral;
+
+    var radioDeCurvaturaDeLaPrimeraVerticalCalculado = radioDeCurvaturaDeLaPrimeraVertical(a, primeraExcentricidadCalculada, latitud3);
+
+    var coeficienteb1 = Math.pow(radioDeCurvaturaDeLaPrimeraVerticalCalculado,-1) / Math.cos(latitud3);
+
+    var coeficienteb7 = b1Calculada * Math.sin(latitud3);alert(coeficienteb7);
+    
+    var coeficienteb9 = (-1/3) * Math.pow(b1Calculada,3) * Math.sin(latitud3) * (1 -(primeraExcentricidadCalculada* Math.pow(Math.cos(latitud3),4)) - 2*primeraExcentricidadAl2 * Math.pow(Math.cos(latitud3),6));
+    alert(coeficienteb9);
+    var coeficienteb11 = (1/15) * Math.pow(b1Calculada,5) * Math.sin(latitud3) * (3 - Math.pow(Math.cos(latitud3),2));
+    alert(coeficienteb11);
+    var convergenciaUTM = (coeficienteb7 * x) + (coeficienteb9 * Math.pow(x,3)) + coeficienteb11;
+
+    convergenciaUTM = radianesAGrados(convergenciaUTM);
+
+    var grados = parseInt(convergenciaUTM);
+
+    convergenciaUTM = Math.abs(convergenciaUTM) - Math.abs(grados);
+
+    convergenciaUTM = convergenciaUTM * 60;
+
+    var minutos = parseInt(convergenciaUTM);
+
+    convergenciaUTM = convergenciaUTM - minutos;
+
+    convergenciaUTM = convergenciaUTM * 60;
+
+    var segundos = (convergenciaUTM);
+
+    segundos =  segundos.toFixed(3);
+
+    document.getElementById("convergenciaDeMeridianosC").value = grados +"° " + minutos +"' " +segundos+"'' ";
+
+
+
 
 
 
