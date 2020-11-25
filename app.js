@@ -184,6 +184,26 @@ function b10(c, primeraExcentricidadCalculada, latitud3){
     return (1/24)*Math.pow(c,-4)*(1+4*primeraExcentricidadCalculada* Math.pow(Math.cos(latitud3),2) );
 }
 
+function decimalesAGradosMinutosSegundos(decimales){
+    var grados = parseInt(decimales);
+
+    decimales = Math.abs(decimales) - Math.abs(grados);
+
+    decimales = decimales * 60;
+
+    var minutos = parseInt(decimales);
+
+    decimales = decimales - minutos;
+
+    decimales = decimales * 60;
+
+    var segundos = (decimales);
+
+    segundos =  segundos.toFixed(3);
+
+    return [grados, minutos, segundos];
+}
+
 document.getElementById("convertir").onclick = function(){
 
     var latitud = parseFloat(document.getElementById("latitud").value);
@@ -419,7 +439,9 @@ document.getElementById("convertirC").onclick = function(){
 
     var latitud = latitud3 + b2Calculada * Math.pow(x,2) + b4Calculada * Math.pow(x,4) + b6Calculada * Math.pow(x, 6); 
 
-    document.getElementById("latitudC").value = radianesAGrados(latitud);
+    var datosLatitud = decimalesAGradosMinutosSegundos(radianesAGrados(latitud));
+
+    document.getElementById("latitudC").value = datosLatitud[0]+"° " + datosLatitud[1]+"' " + datosLatitud[2]+"''";
 
     var huso =  document.getElementById("husoC").value;
 
@@ -427,7 +449,9 @@ document.getElementById("convertirC").onclick = function(){
     
     var longitud = gradosARadianes(meridianoCentral) + b1Calculada * x + b3Calculada * Math.pow(x,3) + b5Calculada * Math.pow(x,5);
 
-    document.getElementById("longitudC").value = radianesAGrados(longitud);
+    var datosLongitud = decimalesAGradosMinutosSegundos(radianesAGrados(longitud));
+
+    document.getElementById("longitudC").value = datosLongitud[0] +"° "+ datosLongitud[1] +"' "+ datosLongitud[2]+"''";
 
     if(latitud>0){
         document.getElementById("hemisferioC").value="Norte";
